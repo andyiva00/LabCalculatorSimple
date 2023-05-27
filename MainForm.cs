@@ -310,6 +310,10 @@ namespace LabCalculatorSimple
                 arithmometer.Clear();
                 currentOperand = "0";
             }
+            else if (Name == "buttonSign")
+            {
+                SwitchOperandSign();
+            }
 
             // DEBUG
             textBoxOperand.Text = currentOperand;
@@ -331,6 +335,18 @@ namespace LabCalculatorSimple
             if (!currentOperand.Contains(".")) 
             {
                 currentOperand += '.';
+            }
+        }
+
+        private void SwitchOperandSign()
+        {
+            if (currentOperand.StartsWith("-"))
+            {
+                currentOperand = currentOperand.Substring(1);
+            }
+            else
+            {
+                currentOperand = "-" + currentOperand;
             }
         }
 
