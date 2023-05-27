@@ -15,6 +15,7 @@ namespace LabCalculatorSimple
     public partial class MainForm : Form
     {
         string currentOperand = "0";
+        int historyListIterator = 0;
         private enum MathFunctions
         {
             None, Add, Subtract, Multiply, Divide, Sqr, Sqrt, OverX, Percent
@@ -357,6 +358,7 @@ namespace LabCalculatorSimple
             if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
             {
                 currentOperand = arithmometer.Calculate().ToString();
+                AddHistoryRecord();
             }
         }
 
@@ -364,6 +366,14 @@ namespace LabCalculatorSimple
         {
             arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             currentOperand = arithmometer.Calculate().ToString();
+            AddHistoryRecord();
+        }
+
+        private void AddHistoryRecord()
+        {
+            historyListIterator++;
+            listBoxOperationHistory.Items.Insert(0, historyListIterator.ToString() + ") " 
+                + arithmometer.GetExpression());
         }
     }
 }

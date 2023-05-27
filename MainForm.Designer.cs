@@ -362,14 +362,14 @@
             this.listBoxOperationHistory.ItemHeight = 16;
             this.listBoxOperationHistory.Location = new System.Drawing.Point(342, 13);
             this.listBoxOperationHistory.Name = "listBoxOperationHistory";
-            this.listBoxOperationHistory.Size = new System.Drawing.Size(196, 260);
+            this.listBoxOperationHistory.Size = new System.Drawing.Size(271, 260);
             this.listBoxOperationHistory.TabIndex = 30;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 286);
+            this.ClientSize = new System.Drawing.Size(625, 286);
             this.Controls.Add(this.listBoxOperationHistory);
             this.Controls.Add(this.buttonEquals);
             this.Controls.Add(this.buttonPeriod);
