@@ -57,6 +57,7 @@ namespace LabCalculatorSimple
             private float memorySum = 0f;
             private MathFunctions mathFunction = MathFunctions.None;
             private float result = 0f;
+            private bool resultReady = false;
 
             public Calc() { }
 
@@ -70,6 +71,8 @@ namespace LabCalculatorSimple
                 righOperandNegativeSign = false;
                 memorySum = 0f;
                 mathFunction = MathFunctions.None;
+                result = 0f;
+                resultReady = false;
             }
 
             public void SetLeftOperand(float operand)
@@ -103,16 +106,19 @@ namespace LabCalculatorSimple
                 {
                     case MathFunctions.Add:
                         result = leftOperand + rightOperand;
+                        resultReady = true;
                         result_string = result.ToString();
                         break;
 
                     case MathFunctions.Subtract:
                         result = leftOperand - rightOperand;
+                        resultReady = true;
                         result_string = result.ToString();
                         break;
 
                     case MathFunctions.Multiply:
                         result = leftOperand * rightOperand;
+                        resultReady = true;
                         result_string = result.ToString();
                         break;
 
@@ -127,17 +133,20 @@ namespace LabCalculatorSimple
                         else
                         {
                             result = leftOperand / rightOperand;
+                            resultReady = true;
                             result_string = result.ToString();
                         }
                         break;
 
                     case MathFunctions.Sqr:
                         result = leftOperand * leftOperand;
+                        resultReady = true;
                         result_string = result.ToString();
                         break;
 
                     case MathFunctions.Sqrt:
                         result = (float)Math.Sqrt(leftOperand);
+                        resultReady = true;
                         result_string = result.ToString();
                         break;
 
@@ -152,21 +161,80 @@ namespace LabCalculatorSimple
                         else
                         {
                             result = 1 / leftOperand;
+                            resultReady = true;
                             result_string = result.ToString();
                         }
                         break;
                 }
 
-                leftOperandReady = false;
-                rightOperandReady = false;
-                rightOperand = 0f;
+                //leftOperandReady = false;
+                //rightOperandReady = false;
+                //rightOperand = 0f;
+                //mathFunction = MathFunctions.None;
 
                 return result_string;
             }
 
+            public void ContinueCalculation()
+            {
+                if (resultReady)
+                {
+                    resultReady = false;
+                    result = 0f;
+
+                    leftOperandReady = false;
+                    rightOperandReady = false;
+                    rightOperand = 0f;
+
+                    mathFunction = MathFunctions.None;
+                }
+            }
+
             public string GetExpression()
             {
-                return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString() + " = " + result.ToString();
+
+                string expression = "";
+
+                if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
+                {
+
+                }
+                else if (!(mathFunction == MathFunctions.None))
+                {
+                    if (leftOperandReady)
+                    {
+                        expression += leftOperand.ToString();
+                    }
+                    switch (mathFunction)
+                    {
+                        case MathFunctions.Add:
+                            expression += " + ";
+                            break;
+                        case MathFunctions.Subtract:
+                            expression += " - ";
+                            break;
+                        case MathFunctions.Multiply:
+                            expression += " × ";
+                            break;
+                        case MathFunctions.Divide:
+                            expression += " ÷ ";
+                            break;
+                    }
+                    if (rightOperandReady)
+                    {
+                        expression += rightOperand.ToString();
+                    }
+                }
+
+                if (resultReady)
+                {
+                    expression += " = " + result.ToString();
+                }
+                
+
+
+                //return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString() + " = " + result.ToString();
+                return expression;
             }
         }
 
@@ -184,6 +252,9 @@ namespace LabCalculatorSimple
 
         private void handler_keypress(string Name)
         {
+            arithmometer.ContinueCalculation();
+
+
             if (digitDict.ContainsKey(Name))
             {
                 AddDigit(digitDict[Name]);
