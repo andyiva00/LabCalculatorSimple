@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,37 +18,85 @@ namespace LabCalculatorSimple
         private enum MathFunctions
         {
             None, Add, Subtract, Multiply, Divide, Sqr, Sqrt, OverX, Percent
-        }
+        };
+
+        Dictionary<string, char> digitDict = new Dictionary<string, char>()
+        {
+            { "buttonZero",     '0' },
+            { "buttonOne",      '1' },
+            { "buttonTwo",      '2' },
+            { "buttonThree",    '3' },
+            { "buttonFour",     '4' },
+            { "buttonFive",     '5' },
+            { "buttonSix",      '6' },
+            { "buttonSeven",    '7' },
+            { "buttonEight",    '8' },
+            { "buttonNine",     '9' }
+        };
+
+        Dictionary<string, MathFunctions> mathDict = new Dictionary<string, MathFunctions>()
+        {
+            { "buttonAddition",         MathFunctions.Add },
+            { "buttonSubstraction",     MathFunctions.Subtract },
+            { "buttonMultiplication",   MathFunctions.Multiply },
+            { "buttonDivision",         MathFunctions.Divide },
+            { "buttonOverX",            MathFunctions.OverX },
+            { "buttonPercent",          MathFunctions.Percent },
+            { "buttonSqr",              MathFunctions.Sqr },
+            { "buttonSqrt",             MathFunctions.Sqrt }
+        };
 
         class Calc
         {
             private float leftOperand = 0f;
+            private bool leftOperandReady = false;
             private float rightOperand = 0f;
+            private bool rightOperandReady = false;
             private bool leftOperandNegativeSign = false;
             private bool righOperandNegativeSign = false;
             private float memorySum = 0f;
-            private MathFunctions mathFunctions = MathFunctions.None;
+            private MathFunctions mathFunction = MathFunctions.None;
 
             public Calc() { }
 
             public void ClearAll()
             {
                 leftOperand = 0f;
+                leftOperandReady = false;
                 rightOperand = 0f;
+                rightOperandReady = false;
                 leftOperandNegativeSign = false;
                 righOperandNegativeSign = false;
                 memorySum = 0f;
-                mathFunctions = MathFunctions.None;
+                mathFunction = MathFunctions.None;
             }
 
             public void SetLeftOperand(float operand)
             {
-                leftOperand = operand;
+                if (!leftOperandReady)
+                {
+                    leftOperand = operand;
+                    leftOperandReady = true;
+                }
             }
 
             public void SetRightOperand(float operand)
             {
-                rightOperand = operand;
+                if (!rightOperandReady)
+                {
+                    rightOperand = operand;
+                    rightOperandReady = true;
+                }
+            }
+
+            public void SetMathFunction(MathFunctions function)
+            {
+                mathFunction = function;
+            }
+
+            public string GetExpression()
+            {
+                return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString();
             }
         }
 
@@ -64,49 +114,26 @@ namespace LabCalculatorSimple
 
         private void handler_keypress(string Name)
         {
-            switch (Name)
+            if (digitDict.ContainsKey(Name))
             {
-                case "buttonZero":
-                    AddDigit('0');
-                    break;
-                case "buttonOne":
-                    AddDigit('1');
-                    break;
-                case "buttonTwo":
-                    AddDigit('2');
-                    break;
-                case "buttonThree":
-                    AddDigit('3');
-                    break;
-                case "buttonFour":
-                    AddDigit('4');
-                    break;
-                case "buttonFive":
-                    AddDigit('5');
-                    break;
-                case "buttonSix":
-                    AddDigit('6');
-                    break;
-                case "buttonSeven":
-                    AddDigit('7');
-                    break;
-                case "buttonEight":
-                    AddDigit('8');
-                    break;
-                case "buttonNine":
-                    AddDigit('9');
-                    break;
-                case "buttonPeriod":
-                    AddPeriod();
-                    break;
-                case "buttonBackspace":
-                    Backspace();
-                    break;
-
+                AddDigit(digitDict[Name]);
+            }
+            else if (Name == "buttonPeriod")
+            {
+                AddPeriod();
+            }
+            else if (Name == "buttonBackspace")
+            {
+                Backspace();
+            }
+            else if (mathDict.ContainsKey(Name))
+            {
+                AddMathFunction(mathDict[Name]);
             }
 
             // DEBUG
             textBoxOperand.Text = currentOperand;
+            labelExpression.Text = arithmometer.GetExpression();
         }
 
         private void AddDigit(char digit)
@@ -142,6 +169,11 @@ namespace LabCalculatorSimple
             
         }
 
-
+        private void AddMathFunction(MathFunctions mathFunction)
+        {
+            arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+            arithmometer.SetMathFunction(mathFunction);
+            currentOperand = "0";
+        }
     }
 }
