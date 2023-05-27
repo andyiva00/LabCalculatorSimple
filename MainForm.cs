@@ -75,6 +75,22 @@ namespace LabCalculatorSimple
                 resultReady = false;
             }
 
+            public void Clear()
+            {
+                if (leftOperandReady)
+                {
+                    rightOperandReady = false;
+                    rightOperand = 0f;
+                    result = 0f;
+                    resultReady = false;
+                }
+                else
+                {
+                    ClearAll();
+                }
+
+            }
+
             public void SetLeftOperand(float operand)
             {
                 if (!leftOperandReady)
@@ -166,12 +182,6 @@ namespace LabCalculatorSimple
                         }
                         break;
                 }
-
-                //leftOperandReady = false;
-                //rightOperandReady = false;
-                //rightOperand = 0f;
-                //mathFunction = MathFunctions.None;
-
                 return result_string;
             }
 
@@ -289,6 +299,16 @@ namespace LabCalculatorSimple
             {
                 Equals();
             }
+            else if (Name == "buttonC")
+            {
+                arithmometer.ClearAll();
+                currentOperand = "0";
+            }
+            else if (Name == "buttonCE")
+            {
+                arithmometer.Clear();
+                currentOperand = "0";
+            }
 
             // DEBUG
             textBoxOperand.Text = currentOperand;
@@ -337,7 +357,6 @@ namespace LabCalculatorSimple
             if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
             {
                 currentOperand = arithmometer.Calculate().ToString();
-                //arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             }
         }
 
@@ -345,7 +364,6 @@ namespace LabCalculatorSimple
         {
             arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             currentOperand = arithmometer.Calculate().ToString();
-            //arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
         }
     }
 }
