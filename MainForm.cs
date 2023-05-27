@@ -151,7 +151,7 @@ namespace LabCalculatorSimple
                         break;
 
                     case MathFunctions.OverX:
-                        if (rightOperand == 0f)
+                        if (leftOperand == 0f)
                         {
                             result = 0;
                             // TODO: Error message
@@ -195,9 +195,26 @@ namespace LabCalculatorSimple
 
                 string expression = "";
 
-                if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
+                if (mathFunction == MathFunctions.Sqr)
                 {
-
+                    if (leftOperandReady)
+                    {
+                        expression += leftOperand.ToString() + "²";
+                    }
+                }
+                else if (mathFunction == MathFunctions.Sqrt)
+                {
+                    if (leftOperandReady)
+                    {
+                        expression += "√" + leftOperand.ToString();
+                    }
+                }
+                else if (mathFunction == MathFunctions.OverX)
+                {
+                    if (leftOperandReady)
+                    {
+                        expression += "1/" + leftOperand.ToString();
+                    }
                 }
                 else if (!(mathFunction == MathFunctions.None))
                 {
@@ -231,9 +248,6 @@ namespace LabCalculatorSimple
                     expression += " = " + result.ToString();
                 }
                 
-
-
-                //return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString() + " = " + result.ToString();
                 return expression;
             }
         }
