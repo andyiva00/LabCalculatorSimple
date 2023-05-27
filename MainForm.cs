@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -53,8 +54,6 @@ namespace LabCalculatorSimple
             private bool leftOperandReady = false;
             private float rightOperand = 0f;
             private bool rightOperandReady = false;
-            private bool leftOperandNegativeSign = false;
-            private bool righOperandNegativeSign = false;
             private float memorySum = 0f;
             private MathFunctions mathFunction = MathFunctions.None;
             private float result = 0f;
@@ -68,9 +67,6 @@ namespace LabCalculatorSimple
                 leftOperandReady = false;
                 rightOperand = 0f;
                 rightOperandReady = false;
-                leftOperandNegativeSign = false;
-                righOperandNegativeSign = false;
-                memorySum = 0f;
                 mathFunction = MathFunctions.None;
                 result = 0f;
                 resultReady = false;
@@ -113,6 +109,16 @@ namespace LabCalculatorSimple
             public void SetMathFunction(MathFunctions function)
             {
                 mathFunction = function;
+            }
+
+            public void SetMemory(float memory)
+            {
+                memorySum = memory;
+            }
+
+            public float GetMemory()
+            {
+                return memorySum;
             }
 
             public string Calculate()
@@ -258,9 +264,10 @@ namespace LabCalculatorSimple
                 {
                     expression += " = " + result.ToString();
                 }
-                
+              
                 return expression;
             }
+        
         }
 
         Calc arithmometer = new Calc();
@@ -313,6 +320,34 @@ namespace LabCalculatorSimple
             else if (Name == "buttonSign")
             {
                 SwitchOperandSign();
+            }
+            else if (Name == "buttonMC")
+            {
+                arithmometer.SetMemory(0);
+            }
+            else if (Name == "buttonMR")
+            {
+                currentOperand = arithmometer.GetMemory().ToString();
+                if (currentOperand == "")
+                {
+                    currentOperand = "0";
+                }
+            }
+            else if (Name == "buttonMPlus")
+            {
+                if (currentOperand.Length > 0)
+                {
+                    arithmometer.SetMemory(arithmometer.GetMemory()
+                        + float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+                }
+            }
+            else if (Name == "buttonMMinus")
+            {
+                if (currentOperand.Length > 0)
+                {
+                    arithmometer.SetMemory(arithmometer.GetMemory()
+                        - float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+                }
             }
 
             // DEBUG
@@ -388,8 +423,18 @@ namespace LabCalculatorSimple
         private void AddHistoryRecord()
         {
             historyListIterator++;
-            listBoxOperationHistory.Items.Insert(0, historyListIterator.ToString() + ") " 
-                + arithmometer.GetExpression());
+            
+
+            string expression = historyListIterator.ToString() + ") ";
+            expression += arithmometer.GetExpression();
+
+            if (arithmometer.GetMemory() > 0)
+            {
+                expression += " [M: " + arithmometer.GetMemory().ToString() + "]";
+            }
+
+            listBoxOperationHistory.Items.Insert(0, expression);
+
         }
     }
 }
