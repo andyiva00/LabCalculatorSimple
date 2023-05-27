@@ -120,7 +120,9 @@ namespace LabCalculatorSimple
                         if (rightOperand == 0f)
                         {
                             result = 0;
-                            result_string = "Cannot divide by zero";
+                            // TODO: Error message
+                            //result_string = "Cannot divide by zero";
+                            result_string = "0";
                         }
                         else
                         {
@@ -143,7 +145,9 @@ namespace LabCalculatorSimple
                         if (rightOperand == 0f)
                         {
                             result = 0;
-                            result_string = "Cannot divide by zero";
+                            // TODO: Error message
+                            //result_string = "Cannot divide by zero";
+                            result_string = "0";
                         }
                         else
                         {
@@ -151,13 +155,11 @@ namespace LabCalculatorSimple
                             result_string = result.ToString();
                         }
                         break;
-
-                    // TODO:
-                    case MathFunctions.Percent:
-                        result = 0;
-                        result_string = result.ToString();
-                        break;
                 }
+
+                leftOperandReady = false;
+                rightOperandReady = false;
+                rightOperand = 0f;
 
                 return result_string;
             }
@@ -246,12 +248,19 @@ namespace LabCalculatorSimple
             arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             arithmometer.SetMathFunction(mathFunction);
             currentOperand = "0";
+
+            if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
+            {
+                currentOperand = arithmometer.Calculate().ToString();
+                //arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+            }
         }
 
         private void Equals()
         {
             arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             currentOperand = arithmometer.Calculate().ToString();
+            //arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
         }
     }
 }
