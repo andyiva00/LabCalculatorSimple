@@ -56,6 +56,7 @@ namespace LabCalculatorSimple
             private bool righOperandNegativeSign = false;
             private float memorySum = 0f;
             private MathFunctions mathFunction = MathFunctions.None;
+            private float result = 0f;
 
             public Calc() { }
 
@@ -94,9 +95,76 @@ namespace LabCalculatorSimple
                 mathFunction = function;
             }
 
+            public string Calculate()
+            {
+                string result_string = "";
+
+                switch (mathFunction)
+                {
+                    case MathFunctions.Add:
+                        result = leftOperand + rightOperand;
+                        result_string = result.ToString();
+                        break;
+
+                    case MathFunctions.Subtract:
+                        result = leftOperand - rightOperand;
+                        result_string = result.ToString();
+                        break;
+
+                    case MathFunctions.Multiply:
+                        result = leftOperand * rightOperand;
+                        result_string = result.ToString();
+                        break;
+
+                    case MathFunctions.Divide:
+                        if (rightOperand == 0f)
+                        {
+                            result = 0;
+                            result_string = "Cannot divide by zero";
+                        }
+                        else
+                        {
+                            result = leftOperand / rightOperand;
+                            result_string = result.ToString();
+                        }
+                        break;
+
+                    case MathFunctions.Sqr:
+                        result = leftOperand * leftOperand;
+                        result_string = result.ToString();
+                        break;
+
+                    case MathFunctions.Sqrt:
+                        result = (float)Math.Sqrt(leftOperand);
+                        result_string = result.ToString();
+                        break;
+
+                    case MathFunctions.OverX:
+                        if (rightOperand == 0f)
+                        {
+                            result = 0;
+                            result_string = "Cannot divide by zero";
+                        }
+                        else
+                        {
+                            result = 1 / leftOperand;
+                            result_string = result.ToString();
+                        }
+                        break;
+
+                    // TODO:
+                    case MathFunctions.Percent:
+                        result = 0;
+                        result_string = result.ToString();
+                        break;
+                }
+
+                return result_string;
+            }
+
             public string GetExpression()
             {
-                return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString();
+                return leftOperand.ToString() + " " + mathFunction.ToString() + " " + rightOperand.ToString() + " = " + result.ToString();
             }
         }
 
@@ -118,6 +186,10 @@ namespace LabCalculatorSimple
             {
                 AddDigit(digitDict[Name]);
             }
+            else if (mathDict.ContainsKey(Name))
+            {
+                AddMathFunction(mathDict[Name]);
+            }
             else if (Name == "buttonPeriod")
             {
                 AddPeriod();
@@ -126,9 +198,9 @@ namespace LabCalculatorSimple
             {
                 Backspace();
             }
-            else if (mathDict.ContainsKey(Name))
+            else if (Name == "buttonEquals")
             {
-                AddMathFunction(mathDict[Name]);
+                Equals();
             }
 
             // DEBUG
@@ -174,6 +246,12 @@ namespace LabCalculatorSimple
             arithmometer.SetLeftOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
             arithmometer.SetMathFunction(mathFunction);
             currentOperand = "0";
+        }
+
+        private void Equals()
+        {
+            arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+            currentOperand = arithmometer.Calculate().ToString();
         }
     }
 }
