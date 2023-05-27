@@ -43,7 +43,7 @@ namespace LabCalculatorSimple
             { "buttonMultiplication",   MathFunctions.Multiply },
             { "buttonDivision",         MathFunctions.Divide },
             { "buttonOverX",            MathFunctions.OverX },
-            { "buttonPercent",          MathFunctions.Percent },
+            //{ "buttonPercent",          MathFunctions.Percent },
             { "buttonSqr",              MathFunctions.Sqr },
             { "buttonSqrt",             MathFunctions.Sqrt }
         };
@@ -121,6 +121,10 @@ namespace LabCalculatorSimple
                 return memorySum;
             }
 
+            public MathFunctions GetMathFunction()
+            { 
+                return mathFunction; 
+            }
             public string Calculate()
             {
                 string result_string = "";
@@ -187,6 +191,11 @@ namespace LabCalculatorSimple
                             resultReady = true;
                             result_string = result.ToString();
                         }
+                        break;
+
+                    case MathFunctions.Percent:
+                        rightOperand = leftOperand * rightOperand / 100;
+                        result_string = rightOperand.ToString();
                         break;
                 }
                 return result_string;
@@ -306,6 +315,14 @@ namespace LabCalculatorSimple
             else if (Name == "buttonEquals")
             {
                 Equals();
+            }
+            else if (Name == "buttonPercent")
+            {
+                MathFunctions tmpMathFunction = arithmometer.GetMathFunction();
+                arithmometer.SetMathFunction(MathFunctions.Percent);
+                arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
+                currentOperand = arithmometer.Calculate().ToString();
+                arithmometer.SetMathFunction(tmpMathFunction);
             }
             else if (Name == "buttonC")
             {
