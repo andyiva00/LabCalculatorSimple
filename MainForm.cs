@@ -47,7 +47,6 @@ namespace LabCalculatorSimple
             { "buttonSqrt",             MathFunctions.Sqrt }
         };
 
-        private Rectangle original_formRect;
         private Rectangle original_labelExpressionRect;
         private Rectangle original_TextBoxOperandRect;
         private Rectangle original_buttonMCRect;
@@ -80,7 +79,6 @@ namespace LabCalculatorSimple
         private Rectangle original_buttonEqualsRect;
         private Rectangle original_listBoxOperationHistoryRect;
 
-        private float original_formSize;
         private float original_labelExpressionSize;
         private float original_TextBoxOperandSize;
         private float original_buttonMCSize;
@@ -521,7 +519,6 @@ namespace LabCalculatorSimple
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            original_formRect = new Rectangle(this.Location, this.Size);
             original_labelExpressionRect = new Rectangle(labelExpression.Location, labelExpression.Size);
             original_TextBoxOperandRect = new Rectangle(textBoxOperand.Location, textBoxOperand.Size);
             original_buttonMCRect = new Rectangle(buttonMC.Location, buttonMC.Size);
@@ -622,22 +619,17 @@ namespace LabCalculatorSimple
             ResizeControl(listBoxOperationHistory, original_listBoxOperationHistoryRect, original_listBoxOperationHistorySize);
         }
 
-        private void ResizeControl(Control control, Rectangle originalRect, float originalSize)
+        private void ResizeControl(Control control, Rectangle originalRect, float originalFontSize)
         {
             if (originalRect.Width > 0 && originalRect.Height > 0)
             {
-                float xRatio = (float)control.Width / (float)originalRect.Width;
-                float yRatio = (float)control.Height / (float)originalRect.Height;
+                float xRatio = control.Width / (float)originalRect.Width;
+                float yRatio = control.Height / (float)originalRect.Height;
 
-                float ratio = xRatio;
-                if (xRatio >= yRatio)
-                {
-                    ratio = yRatio;
-                }
+                float ratio = (xRatio >= yRatio) ? xRatio : yRatio;
 
-                float fontScale = 1f;
 
-                float newFontSize = originalSize * ratio * fontScale;
+                float newFontSize = originalFontSize * ratio;
                 Font newFont = new Font(control.Font.FontFamily, newFontSize);
                 control.Font = newFont;
             }
