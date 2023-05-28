@@ -215,10 +215,7 @@ namespace LabCalculatorSimple
                     case MathFunctions.Divide:
                         if (rightOperand == 0f)
                         {
-                            result = 0;
-                            // TODO: Error message
-                            //result_string = "Cannot divide by zero";
-                            result_string = "0";
+                            throw new DivideByZeroException("Cannot divide by zero");
                         }
                         else
                         {
@@ -235,6 +232,10 @@ namespace LabCalculatorSimple
                         break;
 
                     case MathFunctions.Sqrt:
+                        if (leftOperand < 0f)
+                        {
+                            throw new ArgumentException("Invalid input");
+                        }
                         result = (float)Math.Sqrt(leftOperand);
                         resultReady = true;
                         result_string = result.ToString();
@@ -243,10 +244,7 @@ namespace LabCalculatorSimple
                     case MathFunctions.OverX:
                         if (leftOperand == 0f)
                         {
-                            result = 0;
-                            // TODO: Error message
-                            //result_string = "Cannot divide by zero";
-                            result_string = "0";
+                            throw new DivideByZeroException("Cannot divide by zero");
                         }
                         else
                         {
@@ -384,8 +382,21 @@ namespace LabCalculatorSimple
                 MathFunctions tmpMathFunction = arithmometer.GetMathFunction();
                 arithmometer.SetMathFunction(MathFunctions.Percent);
                 arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
-                currentOperand = arithmometer.Calculate().ToString();
-                arithmometer.SetMathFunction(tmpMathFunction);
+                try
+                {
+                    currentOperand = arithmometer.Calculate().ToString();
+                    arithmometer.SetMathFunction(tmpMathFunction);
+                }
+                catch (ArgumentException e)
+                {
+                    MessageBox.Show(e.Message);
+                    arithmometer.ClearAll();
+                }
+                catch (DivideByZeroException e)
+                {
+                    MessageBox.Show(e.Message);
+                    arithmometer.ClearAll();
+                }
             }
             else if (Name == "buttonC")
             {
@@ -488,16 +499,43 @@ namespace LabCalculatorSimple
 
             if (mathFunction == MathFunctions.Sqr || mathFunction == MathFunctions.Sqrt || mathFunction == MathFunctions.OverX)
             {
-                currentOperand = arithmometer.Calculate().ToString();
-                AddHistoryRecord();
+                try
+                {
+                    currentOperand = arithmometer.Calculate().ToString();
+                    AddHistoryRecord();
+                }
+                catch (ArgumentException e)
+                {
+                    MessageBox.Show(e.Message);
+                    arithmometer.ClearAll();
+                }
+                catch (DivideByZeroException e)
+                {
+                    MessageBox.Show(e.Message);
+                    arithmometer.ClearAll();
+                }
             }
         }
 
         private void Equals()
         {
             arithmometer.SetRightOperand(float.Parse(currentOperand, CultureInfo.InvariantCulture.NumberFormat));
-            currentOperand = arithmometer.Calculate().ToString();
-            AddHistoryRecord();
+
+            try
+            {
+                currentOperand = arithmometer.Calculate().ToString();
+                AddHistoryRecord();
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show(e.Message);
+                arithmometer.ClearAll();
+            }
+            catch (DivideByZeroException e)
+            {
+                MessageBox.Show(e.Message);
+                arithmometer.ClearAll();
+            }
         }
 
         private void AddHistoryRecord()
