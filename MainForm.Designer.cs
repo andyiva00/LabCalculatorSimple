@@ -84,10 +84,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxOperand.Location = new System.Drawing.Point(3, 20);
+            this.textBoxOperand.Multiline = true;
             this.textBoxOperand.Name = "textBoxOperand";
             this.textBoxOperand.ReadOnly = true;
-            this.textBoxOperand.Size = new System.Drawing.Size(320, 22);
+            this.textBoxOperand.Size = new System.Drawing.Size(320, 29);
             this.textBoxOperand.TabIndex = 1;
+            this.textBoxOperand.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // buttonMC
             // 
@@ -588,6 +590,8 @@
             this.Controls.Add(this.tableLayoutPanelMain);
             this.Name = "MainForm";
             this.Text = "Simple calculator";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.tableLayoutPanelButtons.ResumeLayout(false);
             this.tableLayoutPanelButtons.PerformLayout();
             this.tableLayoutPanelExpression.ResumeLayout(false);
